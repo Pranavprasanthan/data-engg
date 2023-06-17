@@ -1,0 +1,27 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: Pranav@321
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  data_pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    volumes:
+      - ./data_ingestion.py:/app/data_ingestion.py
+      - ./data_processing.py:/app/data_processing.py
+      - ./database.py:/app/database.py
+      - ./data_pipeline.py:/app/data_pipeline.py
+
+volumes:
+  postgres_data:
